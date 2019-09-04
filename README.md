@@ -1,6 +1,16 @@
 # FabCar Client (React JS)
 
-This is the client web based application for FabCar Blockchain application which is a sample app from Hyperledger Fabric. To start this application you have to setup as following. 
+This is the client web based application for FabCar Blockchain application which is a sample app from Hyperledger Fabric. 
+
+## Screenshots
+
+![All cars](https://raw.githubusercontent.com/chhaileng/fabcar-client/master/screenshots/fabcar-all.png)
+
+![Add car](https://raw.githubusercontent.com/chhaileng/fabcar-client/master/screenshots/fabcar-add.png)
+
+![Change owner](https://raw.githubusercontent.com/chhaileng/fabcar-client/master/screenshots/fabcar-change-owner.png)
+
+To start this application you have to setup as following. 
 
 ## Steps
 
