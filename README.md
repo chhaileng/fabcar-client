@@ -1,68 +1,181 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# FabCar Client (React JS)
 
-## Available Scripts
+This is the client web based application for FabCar Blockchain application which is a sample app from Hyperledger Fabric. To start this application you have to setup as following. 
 
-In the project directory, you can run:
+## Steps
 
-### `npm start`
+1. Network setup
+2. Enroll admin and register user
+3. REST Server
+4. Client app
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Network
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+Clone the project from [fabric-samples](https://github.com/hyperledger/fabric-samples) repository. Go to `fabcar` directory and start the network.
 
-### `npm test`
+```
+$ git clone https://github.com/hyperledger/fabric-samples.git
+$ cd fabcar
+$ ./startFabric.sh
+```
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Now the network should be started and chaincode should be installed to the network.
 
-### `npm run build`
+## Enroll admin and register user
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+In the `fabcar` directory, go to javascript directory and run:
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+```
+$ node enrollAdmin.js
+$ node registerUser.js
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+After running this, we can test by querying some records from the network by running:
 
-### `npm run eject`
+```
+$ node query.js
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## REST Server
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Create a file `app.js` in that directory and put this code.
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```
+const express = require('express')
+const app = express()
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+const { FileSystemWallet, Gateway } = require('fabric-network');
+const path = require('path');
 
-## Learn More
+const ccpPath = path.resolve(__dirname, '..', '..', 'first-network', 'connection-org1.json');
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+// CORS Origin
+app.use(function (req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  next();
+});
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+app.use(express.json());
 
-### Code Splitting
+app.get('/cars', async (req, res) => {
+  try {
+    const walletPath = path.join(process.cwd(), 'wallet');
+    const wallet = new FileSystemWallet(walletPath);
+    const userExists = await wallet.exists('user1');
+    if (!userExists) {
+      res.json({status: false, error: {message: 'User not exist in the wallet'}});
+      return;
+    }
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+    const gateway = new Gateway();
+    await gateway.connect(ccpPath, { wallet, identity: 'user1', discovery: { enabled: true, asLocalhost: true } });
+    const network = await gateway.getNetwork('mychannel');
+    const contract = network.getContract('fabcar');
+    const result = await contract.evaluateTransaction('queryAllCars');
+    res.json({status: true, cars: JSON.parse(result.toString())});
+  } catch (err) {
+    res.json({status: false, error: err});
+  }
+});
 
-### Analyzing the Bundle Size
+app.get('/cars/:key', async (req, res) => {
+  try {
+    const walletPath = path.join(process.cwd(), 'wallet');
+    const wallet = new FileSystemWallet(walletPath);
+    const userExists = await wallet.exists('user1');
+    if (!userExists) {
+      res.json({status: false, error: {message: 'User not exist in the wallet'}});
+      return;
+    }
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+    const gateway = new Gateway();
+    await gateway.connect(ccpPath, { wallet, identity: 'user1', discovery: { enabled: true, asLocalhost: true } });
+    const network = await gateway.getNetwork('mychannel');
+    const contract = network.getContract('fabcar');
+    const result = await contract.evaluateTransaction('queryCar', req.params.key);
+    res.json({status: true, car: JSON.parse(result.toString())});
+  } catch (err) {
+    res.json({status: false, error: err});
+  }
+});
 
-### Making a Progressive Web App
+app.post('/cars', async (req, res) => {
+  if ((typeof req.body.key === 'undefined' || req.body.key === '') ||
+      (typeof req.body.make === 'undefined' || req.body.make === '') ||
+      (typeof req.body.model === 'undefined' || req.body.model === '') ||
+      (typeof req.body.color === 'undefined' || req.body.color === '') ||
+      (typeof req.body.owner === 'undefined' || req.body.owner === '')) {
+    res.json({status: false, error: {message: 'Missing body.'}});
+    return;
+  }
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+  try {
+    const walletPath = path.join(process.cwd(), 'wallet');
+    const wallet = new FileSystemWallet(walletPath);
+    const userExists = await wallet.exists('user1');
+    if (!userExists) {
+      res.json({status: false, error: {message: 'User not exist in the wallet'}});
+      return;
+    }
 
-### Advanced Configuration
+    const gateway = new Gateway();
+    await gateway.connect(ccpPath, { wallet, identity: 'user1', discovery: { enabled: true, asLocalhost: true } });
+    const network = await gateway.getNetwork('mychannel');
+    const contract = network.getContract('fabcar');
+    await contract.submitTransaction('createCar', req.body.key, req.body.make, req.body.model, req.body.color, req.body.owner);
+    res.json({status: true, message: 'Transaction (create car) has been submitted.'})
+  } catch (err) {
+    res.json({status: false, error: err});
+  }
+});
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+app.put('/cars', async (req, res) => {
+  if ((typeof req.body.key === 'undefined' || req.body.key === '') ||
+      (typeof req.body.owner === 'undefined' || req.body.owner === '')) {
+    res.json({status: false, error: {message: 'Missing body.'}});
+    return;
+  }
 
-### Deployment
+  try {
+    const walletPath = path.join(process.cwd(), 'wallet');
+    const wallet = new FileSystemWallet(walletPath);
+    const userExists = await wallet.exists('user1');
+    if (!userExists) {
+      res.json({status: false, error: {message: 'User not exist in the wallet'}});
+      return;
+    }
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+    const gateway = new Gateway();
+    await gateway.connect(ccpPath, { wallet, identity: 'user1', discovery: { enabled: true, asLocalhost: true } });
+    const network = await gateway.getNetwork('mychannel');
+    const contract = network.getContract('fabcar');
+    await contract.submitTransaction('changeCarOwner', req.body.key, req.body.owner);
+    res.json({status: true, message: 'Transaction (change car owner) has been submitted.'})
+  } catch (err) {
+    res.json({status: false, error: err});
+  }
+});
 
-### `npm run build` fails to minify
+app.listen(3000, () => {
+  console.log('REST Server listening on port 3000');
+});
+```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+Run
+
+```
+$ node app.js
+```
+
+## Client app
+
+Clone this repository and run
+
+```
+$ npm start
+```
+
+## Happy hacking...

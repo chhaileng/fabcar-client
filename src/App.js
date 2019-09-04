@@ -1,26 +1,32 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import { BrowserRouter, Route, Link } from 'react-router-dom';
+
+import AllCars from './AllCars';
+import AddCar from './AddCar';
+import ChangeOwner from './ChangeOwner';
+
+class App extends React.Component {
+	render() {
+		return (
+			<BrowserRouter>
+				<nav className='light-blue darken-3'>
+					<div className="nav-wrapper container">
+						<Link to='/' className="brand-logo">Fabric Car</Link>
+						<ul id="nav-mobile" className="right hide-on-med-and-down">
+							<li><Link to='/'><i className='material-icons left'>directions_car</i>All Cars</Link></li>
+							<li><Link to='/add'><i className="material-icons left">add_circle_outline</i>Add Car</Link></li>
+						</ul>
+					</div>
+				</nav>
+				<div className='container'>
+					<Route exact path="/" component={AllCars} />
+					<Route exact path="/add" component={AddCar} />
+					<Route exact path="/change-owner/:key" component={ChangeOwner} />
+				</div>
+			</BrowserRouter>
+		);
+	}
 }
 
 export default App;
