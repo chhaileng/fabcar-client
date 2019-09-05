@@ -42,7 +42,7 @@ export default class ChangeOwner extends React.Component {
             if (res.data.status) {
                 this.setState({car: res.data.car});
             } else {
-                alert('Car ' + this.props.match.params.key + ' not found!');
+                alert(res.data.error.message);
                 this.setState({redirect: true});
             }
         }).catch(err => {
