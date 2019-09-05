@@ -36,8 +36,9 @@ export default class ChangeOwner extends React.Component {
     }
 
     componentDidMount() {
+        this.props.setLoading(true);
         axios.get('http://master:3000/cars/' + this.props.match.params.key).then(res => {
-            this.setState({showLoading: false})
+            this.props.setLoading(false);
             if (res.data.status) {
                 this.setState({car: res.data.car});
             } else {
@@ -45,6 +46,7 @@ export default class ChangeOwner extends React.Component {
                 this.setState({redirect: true});
             }
         }).catch(err => {
+            this.props.setLoading(false);
             alert('Something went wrong')
         })
     }
