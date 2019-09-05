@@ -7,20 +7,20 @@ export default class AllCars extends React.Component {
     constructor() {
         super();
         this.state = {
-            cars: [],
-            showLoading: true
+            cars: []
         }
     }
     componentDidMount() {
+        this.props.setLoading(true);
         axios.get('http://master:3000/cars').then(res => {
-            this.setState({showLoading: false});
+            this.props.setLoading(false);
             if(res.data.status) {
                 this.setState({cars: res.data.cars})
             } else {
                 alert(res.data.error.message)
             }
         }).catch(err => {
-            this.setState({showLoading: false});
+            this.props.setLoading(false);
             alert('Something went wrong')
         })
     }
@@ -57,7 +57,6 @@ export default class AllCars extends React.Component {
                         {tbody}
                     </tbody>
                 </table>
-                { this.state.showLoading ? <div className="progress"><div className="indeterminate"></div></div> : null}
             </div>
         )
     }

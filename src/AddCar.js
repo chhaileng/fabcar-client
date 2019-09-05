@@ -11,8 +11,7 @@ export default class AddCar extends React.Component {
             model: '',
             color: '',
             owner: '',
-            redirect: false,
-            showLoading: false
+            redirect: false
         }
     }
 
@@ -24,7 +23,7 @@ export default class AddCar extends React.Component {
 
     onFormSubmit(e) {
         e.preventDefault();
-        this.setState({showLoading: true});
+        this.props.setLoading(true);
         axios.post('http://master:3000/cars', {
             key: this.state.key,
             make: this.state.make,
@@ -32,7 +31,7 @@ export default class AddCar extends React.Component {
             color: this.state.color,
             owner: this.state.owner
         }).then(res => {
-            this.setState({showLoading: false});
+            this.props.setLoading(false);
             if (res.data.status) {
                 alert(res.data.message);
                 this.setState({redirect: true})
@@ -40,7 +39,7 @@ export default class AddCar extends React.Component {
                 alert(res.data.error.message)
             }
         }).catch(err => {
-            this.setState({showLoading: false});
+            this.props.setLoading(false);
             alert('Something went wrong')
         });
     }
@@ -56,17 +55,17 @@ export default class AddCar extends React.Component {
                     <form className="col s12" onSubmit={this.onFormSubmit.bind(this)}>
                         <div className="row">
                             <div className="input-field col s12">
-                                <input id="key" type="text" className="validate" value={this.state.key} onChange={this.onKeyChanged.bind(this)} />
+                                <input id="key" type="text" className="validate" required value={this.state.key} onChange={this.onKeyChanged.bind(this)} />
                                 <label htmlFor="key">Key (e.g. CAR12)</label>
                             </div>
                         </div>
                         <div className="row">
                             <div className="input-field col s4">
-                                <input id="make" type="text" className="validate" value={this.state.make} onChange={this.onMakeChanged.bind(this)} />
+                                <input id="make" type="text" className="validate" required value={this.state.make} onChange={this.onMakeChanged.bind(this)} />
                                 <label htmlFor="make">Make (e.g. Lexus)</label>
                             </div>
                             <div className="input-field col s4">
-                                <input id="model" type="text" className="validate" value={this.state.model} onChange={this.onModelChanged.bind(this)} />
+                                <input id="model" type="text" className="validate" required value={this.state.model} onChange={this.onModelChanged.bind(this)} />
                                 <label htmlFor="model">Model (e.g. NX 200t)</label>
                             </div>
                             <div className="input-field col s4">
@@ -84,20 +83,19 @@ export default class AddCar extends React.Component {
                         </div>
                         <div className="row">
                             <div className="input-field col s12">
-                                <input id="owner" type="text" className="validate" value={this.state.owner} onChange={this.onOwnerChanged.bind(this)} />
+                                <input id="owner" type="text" className="validate" required value={this.state.owner} onChange={this.onOwnerChanged.bind(this)} />
                                 <label htmlFor="owner">Owner</label>
                             </div>
                         </div>
                         <div className='row'>
                             <div className="input-field col s12">
-                                <button className="btn waves-effect waves-light" type="submit" name="action">Submit
+                                <button className="btn waves-effect waves-light light-blue darken-3" type="submit" name="action">Submit
                                     <i className="material-icons right">send</i>
                                 </button>
                             </div>
                         </div>
                     </form>
                 </div>
-                { this.state.showLoading ? <div className="progress"><div className="indeterminate"></div></div> : null}
             </div>
         )
     }

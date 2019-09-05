@@ -9,7 +9,6 @@ export default class ChangeOwner extends React.Component {
             key: this.props.match.params.key,
             owner: '',
             redirect: false,
-            showLoading: true,
             car: {}
         }
     }
@@ -18,12 +17,12 @@ export default class ChangeOwner extends React.Component {
 
     onFormSubmit(e) {
         e.preventDefault();
-        this.setState({showLoading: true});
+        this.props.setLoading(true);
         axios.put('http://master:3000/cars', {
             key: this.state.key,
             owner: this.state.owner
         }).then(res => {
-            this.setState({showLoading: false});
+            this.props.setLoading(false);
             if (res.data.status) {
                 alert(res.data.message);
                 this.setState({redirect: true})
@@ -31,7 +30,7 @@ export default class ChangeOwner extends React.Component {
                 alert(res.data.error.message)
             }
         }).catch(err => {
-            this.setState({showLoading: false});
+            this.props.setLoading(false);
             alert('Something went wrong')
         });
     }
@@ -41,7 +40,6 @@ export default class ChangeOwner extends React.Component {
             this.setState({showLoading: false})
             if (res.data.status) {
                 this.setState({car: res.data.car});
-                console.log(this.state.car)
             } else {
                 alert('Car ' + this.props.match.params.key + ' not found!');
                 this.setState({redirect: true});
@@ -68,7 +66,7 @@ export default class ChangeOwner extends React.Component {
                 </tbody>
             </table>
             </div>
-        </div> : <h6>Loading old information...</h6>
+        </div> : <h6>Loading information...</h6>
         return (
             <div>
                 <h4>Old Information</h4>
@@ -79,21 +77,20 @@ export default class ChangeOwner extends React.Component {
                         <div className="row">
                             <input disabled id="key" type="hidden" className="validate" value={this.state.key} />
                             <div className="input-field col s12">
-                                <input id="owner" type="text" className="validate" value={this.state.owner} onChange={this.onOwnerChanged.bind(this)} />
+                                <input id="owner" type="text" className="validate" required value={this.state.owner} onChange={this.onOwnerChanged.bind(this)} />
                                 <label htmlFor="owner">New Owner</label>
                             </div>
                         </div>
                         
                         <div className='row'>
                             <div className="input-field col s12">
-                                <button className="btn waves-effect waves-light" type="submit" name="action">Submit
+                                <button className="btn waves-effect waves-light light-blue darken-3" type="submit" name="action">Submit
                                     <i className="material-icons right">send</i>
                                 </button>
                             </div>
                         </div>
                     </form>
                 </div>
-                { this.state.showLoading ? <div className="progress"><div className="indeterminate"></div></div> : null}
             </div>
         )
     }
