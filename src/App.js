@@ -1,10 +1,11 @@
 import React from 'react';
 
-import { BrowserRouter, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Route, Link, Switch } from 'react-router-dom';
 
 import AllCars from './AllCars';
 import AddCar from './AddCar';
 import ChangeOwner from './ChangeOwner';
+import NotFound from './NotFound';
 
 class App extends React.Component {
 	constructor() {
@@ -30,17 +31,21 @@ class App extends React.Component {
 					</div>
 				</nav>
 				<div className='container'>
-					<Route exact path="/" render={
-						(props) => <AllCars {...props} setLoading={(status) => {this.setState({isLoading: status})}} />
-					} />
+					<Switch>
+						<Route exact path="/" render={
+							(props) => <AllCars {...props} setLoading={(status) => {this.setState({isLoading: status})}} />
+						} />
 
-					<Route exact path="/add" render={
-						(props) => <AddCar {...props} setLoading={(status) => {this.setState({isLoading: status})}} />
-					} />
+						<Route exact path="/add" render={
+							(props) => <AddCar {...props} setLoading={(status) => {this.setState({isLoading: status})}} />
+						} />
 
-					<Route exact path="/change-owner/:key" render={
-						(props) => <ChangeOwner {...props} setLoading={(status) => {this.setState({isLoading: status})}} />
-					} />
+						<Route exact path="/change-owner/:key" render={
+							(props) => <ChangeOwner {...props} setLoading={(status) => {this.setState({isLoading: status})}} />
+						} />
+
+						<Route path='/*' component={NotFound} />
+					</Switch>
 				</div>
 			</BrowserRouter>
 		);
