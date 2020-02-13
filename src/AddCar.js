@@ -24,7 +24,7 @@ export default class AddCar extends React.Component {
     onFormSubmit(e) {
         e.preventDefault();
         this.props.setLoading(true);
-        axios.post('http://'+  process.env.API_HOST  +':'+ process.env.API_PORT+'/cars', {
+        axios.post('http://'+  process.env.REACT_APP_API_HOST  +':'+ process.env.REACT_APP_API_PORT+'/cars', {
             key: this.state.key,
             make: this.state.make,
             model: this.state.model,
