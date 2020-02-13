@@ -12,7 +12,7 @@ export default class AllCars extends React.Component {
     }
     componentDidMount() {
         this.props.setLoading(true);
-        axios.get('http://master:3000/cars').then(res => {
+        axios.get('http://'+ { process.env.HTTP_HOST } +':3000/cars').then(res => {
             this.props.setLoading(false);
             if(res.data.status) {
                 this.setState({cars: res.data.cars})

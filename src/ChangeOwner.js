@@ -18,7 +18,7 @@ export default class ChangeOwner extends React.Component {
     onFormSubmit(e) {
         e.preventDefault();
         this.props.setLoading(true);
-        axios.put('http://master:3000/cars', {
+        axios.put('http://'+ { process.env.HTTP_HOST } +':3000/cars', {
             key: this.state.key,
             owner: this.state.owner
         }).then(res => {
@@ -37,7 +37,7 @@ export default class ChangeOwner extends React.Component {
 
     componentDidMount() {
         this.props.setLoading(true);
-        axios.get('http://master:3000/cars/' + this.props.match.params.key).then(res => {
+        axios.get('http://'+ { process.env.HTTP_HOST } +':3000/cars/' + this.props.match.params.key).then(res => {
             this.props.setLoading(false);
             if (res.data.status) {
                 this.setState({car: res.data.car});
