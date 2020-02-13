@@ -180,12 +180,98 @@ Run
 $ node app.js
 ```
 
-## Client app
+## Running React Client Web
+
+### Windows
 
 Clone this repository and run
 
 ```
+$ cd fabcar-client/ 
 $ npm start
+```
+
+[Optional] Change API endpoint by edit REACT_APP_API_HOST var in `.env.development`, `.env.test`, `.env.production`
+
+- localhost to `Server IP`
+  
+```ENV
+REACT_APP_API_HOST=localhost # Server IP
+```
+
+```
+$ npm install create-react-app -g
+$ npm install axios react-dom react-router-dom
+$ npm run build
+```
+
+### Ubuntu
+
+Clone this repository and run
+
+```
+$ cd fabcar-client/ 
+$ npm start
+```
+
+[Optional] Change API endpoint by edit REACT_APP_API_HOST var in `.env.development`, `.env.test`, `.env.production`
+
+- localhost to `Server IP`
+  
+```ENV
+REACT_APP_API_HOST=localhost # Server IP
+```
+
+Create new react app 
+```
+$ cd ../
+$ npm install create-react-app -g
+$ create-react-app fabcar-ui
+```
+
+Remove default files created by react and copy source code from fabcar-client to new react app folder
+```
+$ cd fabcar-ui
+$ rm -rf src
+$ cp -r ../fabcar-client/src ../fabcar-client/.env.* ./
+$ cp ../fabcar-client/public/index.html ./public/
+```
+
+Install dependencies and build project
+```
+$ npm install axios react-dom react-router-dom
+$ npm run build
+```
+
+### Deploy docker container for both window and ubuntu
+
+Deploy NGINX container
+- Go to your react app root directory
+- Create `default.conf` file 
+
+```
+vi default.conf
+```
+
+Copy and paste below script in `default.conf`
+
+```conf
+server {
+   listen 80;
+   server_name  localhost;
+
+   location / {
+       root   /usr/share/nginx/html;
+       index  index.html;
+       try_files $uri $uri/ /index.html;
+   }
+}
+```
+
+Run docker NGINX container on port 8081 by exposed the port
+
+```sh
+$ docker run --name fabcar-nginx-container -d -p 8081:80 -v $(pwd)/build:/usr/share/nginx/html -v $(pwd)/default.conf:/etc/nginx/conf.d/default.conf nginx
 ```
 
 ## Happy hacking...
