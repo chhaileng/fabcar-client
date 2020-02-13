@@ -2,7 +2,6 @@ import React from 'react';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
 
-const BASE_URL = process.env.REACT_APP_BASE_URL;
 export default class AddCar extends React.Component {
     constructor() {
         super();
@@ -25,7 +24,7 @@ export default class AddCar extends React.Component {
     onFormSubmit(e) {
         e.preventDefault();
         this.props.setLoading(true);
-        axios.post('http://'+ { process.env.HTTP_HOST } +':3000/cars', {
+        axios.post('http://'+  process.env.API_HOST  +':'+ process.env.API_PORT+'/cars', {
             key: this.state.key,
             make: this.state.make,
             model: this.state.model,
