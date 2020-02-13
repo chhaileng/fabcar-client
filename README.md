@@ -184,20 +184,21 @@ $ node app.js
 
 ### Windows
 
-Clone this repository and run
+Clone this repository and update environment variables in project folder
 
 ```
-$ cd fabcar-client/ 
-$ npm start
+$ cd fabcar-client/
 ```
 
 [Optional] Change API endpoint by edit REACT_APP_API_HOST var in `.env.development`, `.env.test`, `.env.production`
 
-- localhost to `Server IP`
+- `localhost` to `Server IP`
   
 ```ENV
 REACT_APP_API_HOST=localhost # Server IP
 ```
+
+Install dependencies and build project
 
 ```
 $ npm install create-react-app -g
@@ -207,11 +208,10 @@ $ npm run build
 
 ### Ubuntu
 
-Clone this repository and run
+Clone this repository and update environment variables in project folder
 
 ```
 $ cd fabcar-client/ 
-$ npm start
 ```
 
 [Optional] Change API endpoint by edit REACT_APP_API_HOST var in `.env.development`, `.env.test`, `.env.production`
