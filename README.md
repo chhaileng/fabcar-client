@@ -190,9 +190,9 @@ Clone this repository and update environment variables in project folder
 $ cd fabcar-client/
 ```
 
-[Optional] Change API endpoint by edit REACT_APP_API_HOST var in `.env.development`, `.env.test`, `.env.production`
+[Optional] Change API endpoint by editing REACT_APP_API_HOST var in `.env.development`, `.env.test`, `.env.production`
 
-- `localhost` to `Server IP`
+- change `localhost` to `Server IP`
   
 ```ENV
 REACT_APP_API_HOST=localhost # Server IP
@@ -214,22 +214,22 @@ Clone this repository and update environment variables in project folder
 $ cd fabcar-client/ 
 ```
 
-[Optional] Change API endpoint by edit REACT_APP_API_HOST var in `.env.development`, `.env.test`, `.env.production`
+[Optional] Change API endpoint by editing REACT_APP_API_HOST var in `.env.development`, `.env.test`, `.env.production`
 
-- localhost to `Server IP`
+- change `localhost` to `Server IP`
   
 ```ENV
 REACT_APP_API_HOST=localhost # Server IP
 ```
 
-Create new react app 
+Create new React App 
 ```
 $ cd ../
 $ npm install create-react-app -g
 $ create-react-app fabcar-ui
 ```
 
-Remove default files created by react and copy source code from fabcar-client to new react app folder
+Remove default files created by React and copy source codes from fabcar-client to new React App folder
 ```
 $ cd fabcar-ui
 $ rm -rf src
@@ -246,14 +246,14 @@ $ npm run build
 ### Deploy docker container for both window and ubuntu
 
 Deploy NGINX container
-- Go to your react app root directory
+- Go to your React App root directory
 - Create `default.conf` file 
 
 ```
 vi default.conf
 ```
 
-Copy and paste below script in `default.conf`
+Copy and paste below script to `default.conf`
 
 ```conf
 server {
