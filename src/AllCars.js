@@ -11,6 +11,11 @@ export default class AllCars extends React.Component {
         }
     }
     componentDidMount() {
+        console.log('http://'+  process.env.NODE_ENV  +':'+ process.env.REACT_APP_DOMAIN_NAME+'/cars');
+        console.log('http://'+  process.env.REACT_APP_HTTP_HOST  +':'+ process.env.REACT_APP_PORT+'/cars');
+        console.log('http://'+  process.env.REACT_APP_HTTPS_HOST  +':'+ process.env.REACT_APP_HTTPS_PORT+'/cars');
+        console.log('http://'+  process.env.REACT_APP_API_HOST  +':'+ process.env.REACT_APP_API_PORT+'/cars');
+
         this.props.setLoading(true);
         axios.get('http://'+  process.env.API_HOST  +':'+ process.env.API_PORT+'/cars').then(res => {
             this.props.setLoading(false);
